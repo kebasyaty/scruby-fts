@@ -1,8 +1,8 @@
 site_name: Scruby-Full-Text Docs
 site_description: "Full-text search with Manticore Search."
 site_url: https://kebasyaty.github.io/scruby-full-text/
-site_author: Kebasyaty
-copyright: Copyright &copy; 2026 Maintained by <a href="https://github.com/kebasyaty">Kebasyaty</a>
+site_author: kebasyaty
+copyright: Copyright &copy; 2026 Maintained by <a href="https://github.com/kebasyaty">kebasyaty</a>
 repo_name: kebasyaty/scruby-full-text
 repo_url: https://github.com/kebasyaty/scruby-full-text
 
