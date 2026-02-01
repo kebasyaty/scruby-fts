@@ -10,7 +10,7 @@
   <p>
     <h3>Plugin for Scruby - Full-text search with Manticore Search.</h3>
     <p align="center">
-      <a href="https://github.com/kebasyaty/scruby-full-text/actions/workflows/test.yml" alt="Build Status"><img src="https://github.com/kebasyaty/scruby-full-text/actions/workflows/test.yml/badge.svg" alt="Build Status"></a>
+      <!-- <a href="https://github.com/kebasyaty/scruby-full-text/actions/workflows/test.yml" alt="Build Status"><img src="https://github.com/kebasyaty/scruby-full-text/actions/workflows/test.yml/badge.svg" alt="Build Status"></a> -->
       <a href="https://kebasyaty.github.io/scruby-full-text/" alt="Docs"><img src="https://img.shields.io/badge/docs-available-brightgreen.svg" alt="Docs"></a>
       <a href="https://pypi.python.org/pypi/scruby-full-text/" alt="PyPI pyversions"><img src="https://img.shields.io/pypi/pyversions/scruby-full-text.svg" alt="PyPI pyversions"></a>
       <a href="https://pypi.python.org/pypi/scruby-full-text/" alt="PyPI status"><img src="https://img.shields.io/pypi/status/scruby-full-text.svg" alt="PyPI status"></a>
