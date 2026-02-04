@@ -1352,7 +1352,7 @@ wheels = [
 
 [[package]]
 name = "scruby-full-text"
-version = "0.5.6"
+version = "0.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
