@@ -207,5 +207,6 @@ matches = "src/scruby_full_text/settings.py"
 [tool.pyrefly.sub-config.errors]
 bad-argument-type = false
 
-[tool.pytest.ini_options]
+[tool.pytest]
+addopts = ["--strict-markers"]
 testpaths = ["tests"]
