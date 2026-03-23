@@ -1,6 +1,6 @@
 [project]
 name = "scruby-full-text"
-version = "0.6.0"
+version = "0.6.1"
 description = "Plugin for Scruby - Full-text search with Manticore Search."
 readme = "README.md"
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
@@ -11,8 +11,6 @@ keywords = ["plugin", "scruby", "manticore", "search", "database"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
@@ -30,7 +28,7 @@ classifiers = [
 ]
 dependencies = [
     "anyio>=4.12.1",
-    "manticoresearch",
+    "manticoresearch-asyncio-devel",
     "scruby-plugin>=0.2.2",
     "xloft>=0.9.8",
 ]
@@ -52,10 +50,10 @@ check-url = "https://pypi.org/simple"
 module-root = "src"
 
 [tool.uv.sources]
-manticoresearch = { git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git" }
+manticoresearch-asyncio-devel = { git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git" }
 
 [build-system]
-requires = ["uv_build>=0.9.24,<0.10.0"]
+requires = ["uv_build>=0.9.24,<0.11.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
