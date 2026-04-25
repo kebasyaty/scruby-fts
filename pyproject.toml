@@ -46,15 +46,15 @@ default-groups = ["dev", "lint", "test", "docs", "types"]
 compile-bytecode = true
 check-url = "https://pypi.org/simple"
 
-[tool.uv.build-backend]
-module-root = "src"
-
 [tool.uv.sources]
 manticoresearch-asyncio-devel = { git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git" }
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/scruby_full_text"]
+
 [build-system]
-requires = ["uv_build>=0.9.24,<0.11.0"]
-build-backend = "uv_build"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = ["scruby>=0.32.0"]
@@ -77,6 +77,9 @@ indent-width = 4
 src = ["src", "tests"]
 include = ["src/**/*.py", "tests/**/*.py"]
 exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.[!/.]*/**",
     ".bzr",
     ".direnv",
     ".eggs",
@@ -84,7 +87,6 @@ exclude = [
     ".git-rewrite",
     ".hg",
     ".ipynb_checkpoints",
-    ".mypy_cache",
     ".nox",
     ".pants.d",
     ".pyenv",
@@ -100,14 +102,12 @@ exclude = [
     "buck-out",
     "build",
     "dist",
-    "node_modules",
     "site-packages",
-    "venv",
+    "examples",
     ".github",
     "assets",
     "docs",
     "site",
-    "examples",
 ]
 
 [tool.ruff.lint]
@@ -186,7 +186,45 @@ line-ending = "auto"
 
 [tool.pyrefly]
 project-includes = ["src", "tests"]
-search-path = ["src", "tests"]
+include = [
+    "pyhelpers/**/*.py",
+    "src/**/*.py",
+    "tests/**/*.py",
+]
+project-excludes = [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.[!/.]*/**",
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "site-packages",
+    "examples",
+    ".github",
+    "assets",
+    "docs",
+    "site",
+]
+site-package-path = [".venv/lib/python3.14/site-packages"]
 ignore-errors-in-generated-code = true
 untyped_def_behavior = "check-and-infer-return-any"
 
