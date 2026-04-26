@@ -12,7 +12,7 @@ The settings class contains the following parameters:
 
 from __future__ import annotations
 
-__all__ = ("FullTextSettings",)
+__all__ = ("FTSConfig",)
 
 from typing import ClassVar, final
 
@@ -21,8 +21,8 @@ from xloft import AliasDict
 
 
 @final
-class FullTextSettings:
-    """Plugin settings."""
+class FTSConfig:
+    """FullTextSearch plugin settings."""
 
     config: ClassVar[Configuration] = Configuration(host="http://127.0.0.1:9312")
 

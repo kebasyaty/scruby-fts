@@ -1,1 +1,1 @@
-::: scruby_full_text.settings
+::: scruby_fts.settings

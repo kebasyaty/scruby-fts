@@ -20,8 +20,8 @@ from __future__ import annotations
 
 __all__ = (
     "FullTextSearch",
-    "FullTextSettings",
+    "FTSConfig",
 )
 
-from scruby_full_text.plugin import FullTextSearch
-from scruby_full_text.settings import FullTextSettings
+from scruby_fts.config import FTSConfig
+from scruby_fts.plugin import FullTextSearch

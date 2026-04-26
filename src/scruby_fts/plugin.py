@@ -19,7 +19,7 @@ from anyio import Path
 from scruby import Scruby, ScrubySettings
 from scruby_plugin import ScrubyPlugin
 
-from scruby_full_text.settings import FullTextSettings
+from scruby_fts.config import FTSConfig
 
 
 @final
@@ -33,7 +33,7 @@ class FullTextSearch(ScrubyPlugin):
     async def delete_orphaned_tables(cls) -> None:
         """Delete unnecessary tables that remain due to errors."""
         db_id = ScrubySettings.db_id
-        config = FullTextSettings.config
+        config = FTSConfig.config
         async with manticoresearch.ApiClient(config) as api_client:
             utils_api = manticoresearch.UtilsApi(api_client)
             tables = await utils_api.sql(f"SHOW TABLES LIKE 'scruby_{db_id}%'")
@@ -146,7 +146,7 @@ class FullTextSearch(ScrubyPlugin):
         hash_reduce_left: int = scruby_self._hash_reduce_left
         db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
-        config = FullTextSettings.config
+        config = FTSConfig.config
         db_id = scruby_self._db_id
         # Run quantum loop
         with concurrent.futures.ThreadPoolExecutor(scruby_self._max_workers) as executor:
@@ -206,7 +206,7 @@ class FullTextSearch(ScrubyPlugin):
         hash_reduce_left: int = scruby_self._hash_reduce_left
         db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
-        config = FullTextSettings.config
+        config = FTSConfig.config
         db_id = scruby_self._db_id
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0

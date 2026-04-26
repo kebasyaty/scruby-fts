@@ -7,7 +7,7 @@ import pytest
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubySettings
 
-from scruby_full_text import FullTextSearch, FullTextSettings
+from scruby_fts import FTSConfig, FullTextSearch
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
@@ -65,7 +65,7 @@ class TestNegative:
             match=r"'Car' object has no attribute 'non_existent_field'",
         ):
             await car_coll.plugins.fullTextSearch.find_one(
-                morphology=FullTextSettings.morphology.get("English"),
+                morphology=FTSConfig.morphology.get("English"),
                 full_text_filter=("non_existent_field", "Some query string"),
             )
 
@@ -74,7 +74,7 @@ class TestNegative:
             match=r"'Car' object has no attribute 'non_existent_field'",
         ):
             await car_coll.plugins.fullTextSearch.find_many(
-                morphology=FullTextSettings.morphology.get("English"),
+                morphology=FTSConfig.morphology.get("English"),
                 full_text_filter=("non_existent_field", "Some query string"),
             )
         #
@@ -104,12 +104,12 @@ class TestNegative:
         await car_coll.add_doc(car)
 
         await car_coll.plugins.fullTextSearch.find_one(
-            morphology=FullTextSettings.morphology.get("English"),
+            morphology=FTSConfig.morphology.get("English"),
             full_text_filter=("year", "Some query string"),
         )
 
         await car_coll.plugins.fullTextSearch.find_many(
-            morphology=FullTextSettings.morphology.get("English"),
+            morphology=FTSConfig.morphology.get("English"),
             full_text_filter=("year", "Some query string"),
         )
         #
@@ -139,14 +139,14 @@ class TestPositive:
             await car_coll.add_doc(car)
         # Find a car
         car: Car | None = await car_coll.plugins.fullTextSearch.find_one(
-            morphology=FullTextSettings.morphology.get("English"),
+            morphology=FTSConfig.morphology.get("English"),
             full_text_filter=("brand", "SONY"),
         )
 
         assert car is None
 
         car_2: Car | None = await car_coll.plugins.fullTextSearch.find_one(
-            morphology=FullTextSettings.morphology.get("English"),
+            morphology=FTSConfig.morphology.get("English"),
             full_text_filter=("model", "EZ-6 9"),
             filter_fn=lambda doc: doc.brand == "Mazda",
         )
@@ -175,13 +175,13 @@ class TestPositive:
             await car_coll.add_doc(car)
         # Find a car
         car_list: list[Car] | None = await car_coll.plugins.fullTextSearch.find_many(
-            morphology=FullTextSettings.morphology.get("en"),
+            morphology=FTSConfig.morphology.get("en"),
             full_text_filter=("description", "the future of all humanity"),
         )
         assert car_list is None
 
         car_list_2: list[Car] | None = await car_coll.plugins.fullTextSearch.find_many(
-            morphology=FullTextSettings.morphology.get("en"),
+            morphology=FTSConfig.morphology.get("en"),
             full_text_filter=("description", "future of automotive"),
             filter_fn=lambda doc: doc.brand == "Mazda",
         )

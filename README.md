@@ -81,7 +81,7 @@ import anyio
 from typing import Any
 from pydantic import Field
 from scruby import Scruby, ScrubyModel, ScrubySettings
-from scruby_full_text import FullTextSearch, FullTextSettings
+from scruby_fts import FullTextSearch, FTSConfig
 from pprint import pprint as pp
 
 # Plugins connection.
@@ -124,7 +124,7 @@ async def main() -> None:
 
     # Find one car
     car = await car_coll.plugins.fullTextSearch.find_one(
-        morphology=FullTextSettings.morphology.get("English"),  # 'English' or 'en'
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
         full_text_filter=("model", "EZ-6 9"),
         # filter_fn=lambda doc: doc.brand == "Mazda",
     )
@@ -135,7 +135,7 @@ async def main() -> None:
 
     # Fand many cars
     car_list = await car_coll.plugins.fullTextSearch.find_many(
-        morphology=FullTextSettings.morphology.get("en"),  # 'en' or 'English'
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
         full_text_filter=("description", "future of automotive"),
         # filter_fn=lambda doc: doc.brand == "Mazda",
     )

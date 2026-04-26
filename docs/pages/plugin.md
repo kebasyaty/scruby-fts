@@ -1,1 +1,1 @@
-::: scruby_full_text.plugin
+::: scruby_fts.plugin

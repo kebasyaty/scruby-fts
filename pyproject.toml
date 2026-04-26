@@ -59,7 +59,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/scruby_full_text"]
+packages = ["src/scruby_fts"]
 
 [tool.pyrefly]
 project-includes = ["src", "tests"]
@@ -115,7 +115,7 @@ matches = "tests/**"
 missing-attribute = false
 
 [[tool.pyrefly.sub-config]]
-matches = "src/scruby_full_text/settings.py"
+matches = "src/scruby_fts/settings.py"
 
 [tool.pyrefly.sub-config.errors]
 bad-argument-type = false
