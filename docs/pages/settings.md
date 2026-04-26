@@ -1,1 +1,1 @@
-::: scruby_fts.settings
+::: scruby_fts.config
