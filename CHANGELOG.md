@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+#### v0.8.0 2026-04-26
+
+- Goto `Scruby v0.37.0`.
+- Upgraded dependencies.
+- Updated README.md
+- Updated documentation.
+
 #### v0.7.0 2026-04-26
 
 - Renamed project - `scruby-fts`.

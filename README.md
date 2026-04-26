@@ -80,12 +80,12 @@ sudo systemctl status manticore --no-pager -l
 import anyio
 from typing import Any
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubySettings
+from scruby import Scruby, ScrubyModel, ScrubyConfig
 from scruby_fts import FullTextSearch, FTSConfig
 from pprint import pprint as pp
 
 # Plugins connection.
-ScrubySettings.plugins = [
+ScrubyConfig.plugins = [
     FullTextSearch,
 ]
 

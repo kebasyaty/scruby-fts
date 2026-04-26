@@ -16,7 +16,7 @@ from typing import Any, final
 import manticoresearch
 import orjson
 from anyio import Path
-from scruby import Scruby, ScrubySettings
+from scruby import Scruby, ScrubyConfig
 from scruby_plugin import ScrubyPlugin
 
 from scruby_fts.config import FTSConfig
@@ -32,7 +32,7 @@ class FullTextSearch(ScrubyPlugin):
     @classmethod
     async def delete_orphaned_tables(cls) -> None:
         """Delete unnecessary tables that remain due to errors."""
-        db_id = ScrubySettings.db_id
+        db_id = ScrubyConfig.db_id
         config = FTSConfig.config
         async with manticoresearch.ApiClient(config) as api_client:
             utils_api = manticoresearch.UtilsApi(api_client)
