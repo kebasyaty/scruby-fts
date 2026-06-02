@@ -1,6 +1,6 @@
 [project]
 name = "scruby-fts"
-version = "0.9.0"
+version = "0.9.1"
 description = "Plugin for Scruby - Full-text search with Manticore Search."
 readme = "README.md"
 requires-python = ">=3.12,<4.0"
