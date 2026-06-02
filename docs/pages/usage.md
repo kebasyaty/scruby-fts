@@ -50,7 +50,6 @@ async def main() -> None:
     car = await car_coll.plugins.fullTextSearch.find_one(
         morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
         full_text_filter=("model", "EZ-6 9"),
-        # filter_fn=lambda doc: doc.brand == "Mazda",
     )
     if car is not None:
       pp(car)
@@ -61,7 +60,6 @@ async def main() -> None:
     car_list = await car_coll.plugins.fullTextSearch.find_many(
         morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
         full_text_filter=("description", "future of automotive"),
-        # filter_fn=lambda doc: doc.brand == "Mazda",
     )
     if car_list is not None:
       pp(car_list)
