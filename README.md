@@ -8,7 +8,7 @@
     </a>
   </p>
   <p>
-    <h1>scruby-fts</h1>
+    <h1>Scruby-FTS</h1>
     <h3>Plugin for Scruby - Full-text search with Manticore Search.</h3>
     <p align="center">
       <!-- <a href="https://github.com/kebasyaty/scruby-fts/actions/workflows/test.yml" alt="Build Status"><img src="https://github.com/kebasyaty/scruby-fts/actions/workflows/test.yml/badge.svg" alt="Build Status"></a> -->
