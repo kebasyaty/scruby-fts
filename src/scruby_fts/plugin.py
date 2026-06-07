@@ -8,6 +8,7 @@ from __future__ import annotations
 
 __all__ = ("FullTextSearch",)
 
+
 import concurrent.futures
 import uuid
 from collections.abc import Callable
@@ -92,7 +93,7 @@ class FullTextSearch(ScrubyPlugin):
                 index_api = manticoresearch.IndexApi(api_client)
                 search_api = manticoresearch.SearchApi(api_client)
                 utils_api = manticoresearch.UtilsApi(api_client)
-                try:  # noqa: PLW0717
+                try:
                     # Create table
                     await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
                     # Start search
