@@ -8,9 +8,12 @@ from __future__ import annotations
 
 __all__ = ("FullTextSearch",)
 
-import concurrent.futures
+
 import uuid
+import warnings
 from collections.abc import Callable
+from concurrent.futures import Future, ThreadPoolExecutor, as_completed
+from threading import Event
 from typing import Any, final
 
 import manticoresearch
@@ -54,6 +57,7 @@ class FullTextSearch(ScrubyPlugin):
         class_model: Any,
         config: manticoresearch.configuration.Configuration,
         db_id: str,
+        stop_event: Event,
     ) -> list[Any] | None:
         """Task for finding documents, using full-text search.
 
@@ -62,6 +66,9 @@ class FullTextSearch(ScrubyPlugin):
         Returns:
             List of documents or None.
         """
+        # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
+        warnings.filterwarnings("ignore", category=RuntimeWarning)
+        # Variable initialization
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]  # pyrefly: ignore[bad-index]
         separated_hash: str = "/".join(list(branch_number_as_hash))
         leaf_path = Path(
@@ -92,11 +99,14 @@ class FullTextSearch(ScrubyPlugin):
                 index_api = manticoresearch.IndexApi(api_client)
                 search_api = manticoresearch.SearchApi(api_client)
                 utils_api = manticoresearch.UtilsApi(api_client)
-                try:  # noqa: PLW0717
+                try:
                     # Create table
                     await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
                     # Start search
                     for _, val in data.items():
+                        if stop_event.is_set():
+                            await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
+                            return None
                         doc = class_model.model_validate_json(val)
                         if filter_fn(doc):
                             text_field_content = getattr(doc, text_field_name)
@@ -146,12 +156,14 @@ class FullTextSearch(ScrubyPlugin):
         hash_reduce_left: int = scruby_self._hash_reduce_left
         db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
+        stop_signal = Event()
+        doc: Any | None = None
         config = FTSConfig.config
         db_id = scruby_self._db_id
         # Run quantum loop
-        with concurrent.futures.ThreadPoolExecutor(scruby_self._max_workers) as executor:
-            for branch_number in branch_numbers:
-                future = executor.submit(
+        with ThreadPoolExecutor(scruby_self._max_workers) as executor:
+            futures: list[Future] = [
+                executor.submit(
                     search_task_fn,
                     branch_number,
                     morphology,
@@ -162,11 +174,23 @@ class FullTextSearch(ScrubyPlugin):
                     class_model,
                     config,
                     db_id,
+                    stop_signal,
                 )
+                for branch_number in branch_numbers
+            ]
+            for future in as_completed(futures):
                 docs = await future.result()
                 if docs is not None:
-                    return docs[0]
-        return None
+                    # Get first document
+                    doc = docs[0]
+                    # Cancel all pending tasks in the queue instantly
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    # Trigger the event to tell running tasks to exit
+                    stop_signal.set()
+                    # Stop loop
+                    break
+        # Return document
+        return doc
 
     async def find_many(
         self,
@@ -175,6 +199,8 @@ class FullTextSearch(ScrubyPlugin):
         filter_fn: Callable = lambda _: True,
         limit_docs: int = 100,
         page_number: int = 1,
+        sort_fn: Callable | None = lambda doc: doc.created_at,
+        sort_reverse: bool = True,
     ) -> list[Any] | None:
         """Find the many of documents that match the filter, using full-text search.
 
@@ -192,6 +218,10 @@ class FullTextSearch(ScrubyPlugin):
             limit_docs (int): Limiting the number of documents. By default = 100.
             page_number (int): For pagination. By default = 1.
                                Number of documents per page = limit_docs.
+            sort_fn (Callable | None): Sort the list of documents.
+                                       By default, documents are sorted by creation date.
+            sort_reverse: (bool): Sorting direction.
+                                  By default, sort descending (newest to oldest).
 
         Returns:
             List of documents or None.
@@ -206,17 +236,17 @@ class FullTextSearch(ScrubyPlugin):
         hash_reduce_left: int = scruby_self._hash_reduce_left
         db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
+        stop_signal = Event()
+        stop_outer_loop: bool = False
         config = FTSConfig.config
         db_id = scruby_self._db_id
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
         # Run quantum loop
-        with concurrent.futures.ThreadPoolExecutor(scruby_self._max_workers) as executor:
-            for branch_number in branch_numbers:
-                if number_docs_skippe == 0 and counter >= limit_docs:
-                    return result[:limit_docs]
-                future = executor.submit(
+        with ThreadPoolExecutor(scruby_self._max_workers) as executor:
+            futures: list[Future] = [
+                executor.submit(
                     search_task_fn,
                     branch_number,
                     morphology,
@@ -227,15 +257,31 @@ class FullTextSearch(ScrubyPlugin):
                     class_model,
                     config,
                     db_id,
+                    stop_signal,
                 )
+                for branch_number in branch_numbers
+            ]
+            for future in as_completed(futures):
                 docs = await future.result()
                 if docs is not None:
                     for doc in docs:
                         if number_docs_skippe == 0:
                             if counter >= limit_docs:
-                                return result[:limit_docs]
+                                # Cancel all pending tasks in the queue instantly
+                                executor.shutdown(wait=False, cancel_futures=True)
+                                # Trigger the event to tell running tasks to exit
+                                stop_signal.set()
+                                # Stop loops
+                                stop_outer_loop = True
+                                break
                             result.append(doc)
                             counter += 1
                         else:
                             number_docs_skippe -= 1
+                if stop_outer_loop:
+                    break
+        # Sorting
+        if sort_fn is not None:
+            result.sort(key=sort_fn, reverse=sort_reverse)
+        # Return a document list
         return result or None
