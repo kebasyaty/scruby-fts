@@ -142,7 +142,6 @@ class TestPositive:
             morphology=FTSConfig.morphology.get("English"),
             full_text_filter=("brand", "SONY"),
         )
-
         assert car is None
 
         car_2: Car | None = await car_coll.plugins.fullTextSearch.find_one(
@@ -150,7 +149,6 @@ class TestPositive:
             full_text_filter=("model", "EZ-6 9"),
             filter_fn=lambda doc: doc.brand == "Mazda",
         )
-
         assert car_2.model == "EZ-6 9"
         #
         # Delete DB.
