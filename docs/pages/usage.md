@@ -4,7 +4,7 @@
 import anyio
 from typing import Any
 from pydantic import Field
-from scruby import Scruby, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 from scruby_fts import FullTextSearch, FTSConfig
 from pprint import pprint as pp
 
@@ -54,6 +54,20 @@ async def main() -> None:
     else:
       print("Not Found")
 
+    # Return car in JSON format
+    car: str | None = await car_coll.plugins.fullTextSearch.find_one(
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
+        full_text_filter=("model", "EZ-6 9"),
+        return_type=ReturnType.JSON,
+    )
+
+    # Return car in Dictionary format
+    car: dict | None = await car_coll.plugins.fullTextSearch.find_one(
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
+        full_text_filter=("model", "EZ-6 9"),
+        return_type=ReturnType.DICT,
+    )
+
     # Fand many cars
     car_list = await car_coll.plugins.fullTextSearch.find_many(
         morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
@@ -63,6 +77,20 @@ async def main() -> None:
       pp(car_list)
     else:
       print("Not Found")
+
+    # Return cars in JSON format
+    cars: str | None = await car_coll.plugins.fullTextSearch.find_many(
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
+        full_text_filter=("description", "future of automotive"),
+        return_type=ReturnType.JSON,
+    )
+
+    # Return cars in Dictionary format
+    cars: list[dict] | None = await car_coll.plugins.fullTextSearch.find_many(
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
+        full_text_filter=("description", "future of automotive"),
+        return_type=ReturnType.DICT,
+    )
 
     # Full database deletion.
     # Hint: The main purpose is tests.
