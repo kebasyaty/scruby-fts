@@ -85,9 +85,8 @@ sudo systemctl status manticore --no-pager -l
 import anyio
 from typing import Any
 from pydantic import Field
-from scruby import Scruby, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 from scruby_fts import FullTextSearch, FTSConfig
-from pprint import pprint as pp
 
 
 class Car(ScrubyModel):
@@ -125,25 +124,45 @@ async def main() -> None:
         )
         await car_coll.add_doc(car)
 
-    # Find one car
-    car = await car_coll.plugins.fullTextSearch.find_one(
+    # Find car
+    car: Car | None = await car_coll.plugins.fullTextSearch.find_one(
         morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
         full_text_filter=("model", "EZ-6 9"),
     )
-    if car is not None:
-      pp(car)
-    else:
-      print("Not Found")
 
-    # Fand many cars
-    car_list = await car_coll.plugins.fullTextSearch.find_many(
+    # Return car in JSON format
+    car: str | None = await car_coll.plugins.fullTextSearch.find_one(
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
+        full_text_filter=("model", "EZ-6 9"),
+        return_type=ReturnType.JSON,
+    )
+
+    # Return car in Dictionary format
+    car: dict | None = await car_coll.plugins.fullTextSearch.find_one(
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
+        full_text_filter=("model", "EZ-6 9"),
+        return_type=ReturnType.DICT,
+    )
+
+    # Fand cars
+    cars: list[Car] | None = await car_coll.plugins.fullTextSearch.find_many(
         morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
         full_text_filter=("description", "future of automotive"),
     )
-    if car_list is not None:
-      pp(car_list)
-    else:
-      print("Not Found")
+
+    # Return cars in JSON format
+    cars: str | None = await car_coll.plugins.fullTextSearch.find_many(
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
+        full_text_filter=("description", "future of automotive"),
+        return_type=ReturnType.JSON,
+    )
+
+    # Return cars in Dictionary format
+    cars: list[dict] | None = await car_coll.plugins.fullTextSearch.find_many(
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
+        full_text_filter=("description", "future of automotive"),
+        return_type=ReturnType.DICT,
+    )
 
     # Full database deletion.
     # Hint: The main purpose is tests.
