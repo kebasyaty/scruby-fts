@@ -221,15 +221,15 @@ class TestPositive:
         assert cars_json is not None
         assert isinstance(cars_json, str)
         # ReturnType DICT
-        cars_dict: list[dict] | None = await car_coll.plugins.fullTextSearch.find_many(
+        cars_list_dict: list[dict] | None = await car_coll.plugins.fullTextSearch.find_many(
             morphology=FTSConfig.morphology.get("en"),
             full_text_filter=("description", "future of automotive"),
             filter_fn=lambda doc: doc.brand == "Mazda",
             return_type=ReturnType.DICT,
         )
-        assert cars_dict is not None
-        assert isinstance(cars_dict, list)
-        assert isinstance(cars_dict[0], dict)
+        assert cars_list_dict is not None
+        assert isinstance(cars_list_dict, list)
+        assert isinstance(cars_list_dict[0], dict)
         #
         # Delete DB.
         Scruby.napalm()
