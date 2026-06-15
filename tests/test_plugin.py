@@ -5,17 +5,15 @@ from __future__ import annotations
 import manticoresearch
 import pytest
 from pydantic import Field
-from scruby import Scruby, ScrubyConfig, ScrubyModel
+from scruby import Scruby, ScrubyModel
 
 from scruby_fts import FTSConfig, FullTextSearch
 
 pytestmark = pytest.mark.asyncio(loop_scope="module")
 
-
-# Plugins connection.
-ScrubyConfig.plugins = [
-    FullTextSearch,
-]
+# Delete DB.
+# Hint: If the previous test failed and the database remains.
+Scruby.napalm()
 
 
 class Car(ScrubyModel):
@@ -32,6 +30,10 @@ class Car(ScrubyModel):
         frozen=True,
         default_factory=lambda data: f"{data['brand']}:{data['model']}",
     )
+
+
+# Activate database.
+Scruby.run(plugins=[FullTextSearch])
 
 
 async def test_delete_orphaned_tables() -> None:
@@ -119,6 +121,10 @@ class TestNegative:
 
 class TestPositive:
     """Positive tests."""
+
+    async def test_support_scruby_version(self) -> None:
+        """Check Scruby version."""
+        assert FullTextSearch.SCRUBY_VERSION == 1
 
     async def test_find_one(self) -> None:
         """Test a `find_one` method."""
