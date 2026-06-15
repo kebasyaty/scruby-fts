@@ -4,7 +4,7 @@
       <img
         height="80"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/logo.svg">
     </a>
   </p>
   <p>
@@ -34,9 +34,9 @@
 
 <br>
 
-[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby-fts/ "Documentation")
+[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby-fts/ "Documentation")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby-fts/blob/v1/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby-fts/blob/v2/REQUIREMENTS.md "Requirements")
 
 ## Installation
 
@@ -79,7 +79,7 @@ sudo systemctl status manticore --no-pager -l
 
 ## Usage
 
-[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby-fts/latest/pages/usage/ "Examples")
+[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby-fts/latest/pages/usage/ "Examples")
 
 ```python
 import anyio
@@ -156,8 +156,8 @@ if __name__ == "__main__":
 
 <br>
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby-fts/blob/v1/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby-fts/blob/v2/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby-fts/blob/main/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby-fts/blob/main/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby-fts/blob/main/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby-fts/blob/main/GPL-3.0-LICENSE "GPL-3.0")

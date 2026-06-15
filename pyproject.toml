@@ -35,7 +35,7 @@ dependencies = [
 
 [project.urls]
 "Bug Tracker" = "https://github.com/kebasyaty/scruby-fts/issues"
-Changelog = "https://github.com/kebasyaty/scruby-fts/blob/v1/CHANGELOG.md"
+Changelog = "https://github.com/kebasyaty/scruby-fts/blob/v2/CHANGELOG.md"
 Homepage = "https://kebasyaty.github.io/scruby-fts/"
 Repository = "https://github.com/kebasyaty/scruby-fts"
 Source = "https://github.com/kebasyaty/scruby-fts"
