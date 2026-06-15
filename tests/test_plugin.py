@@ -196,13 +196,14 @@ class TestPositive:
                 description="Electric cars are the future of the global automotive industry.",
             )
             await car_coll.add_doc(car)
-        # Find a car
+        # Find a cars
+        # ReturnType MODEL
         car_list: list[Car] | None = await car_coll.plugins.fullTextSearch.find_many(
             morphology=FTSConfig.morphology.get("en"),
             full_text_filter=("description", "the future of all humanity"),
         )
         assert car_list is None
-
+        # ReturnType MODEL
         car_list_2: list[Car] | None = await car_coll.plugins.fullTextSearch.find_many(
             morphology=FTSConfig.morphology.get("en"),
             full_text_filter=("description", "future of automotive"),
@@ -210,6 +211,25 @@ class TestPositive:
         )
         assert car_list_2 is not None
         assert len(car_list_2 or []) == 9
+        # ReturnType JSON
+        cars_json: str | None = await car_coll.plugins.fullTextSearch.find_many(
+            morphology=FTSConfig.morphology.get("en"),
+            full_text_filter=("description", "future of automotive"),
+            filter_fn=lambda doc: doc.brand == "Mazda",
+            return_type=ReturnType.JSON,
+        )
+        assert cars_json is not None
+        assert isinstance(cars_json, str)
+        # ReturnType DICT
+        cars_dict: list[dict] | None = await car_coll.plugins.fullTextSearch.find_many(
+            morphology=FTSConfig.morphology.get("en"),
+            full_text_filter=("description", "future of automotive"),
+            filter_fn=lambda doc: doc.brand == "Mazda",
+            return_type=ReturnType.DICT,
+        )
+        assert cars_dict is not None
+        assert isinstance(cars_dict, list)
+        assert isinstance(cars_dict[0], dict)
         #
         # Delete DB.
         Scruby.napalm()
