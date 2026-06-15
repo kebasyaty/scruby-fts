@@ -1367,7 +1367,7 @@ wheels = [
 
 [[package]]
 name = "scruby"
-version = "1.4.4"
+version = "1.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -1379,12 +1379,12 @@ dependencies = [
     { name = "xloft" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c2/c6/d3c7b05b57d5f393c585eb478817cd601d80bcad8b8a97a1dbc756a41763/scruby-1.4.4-py3-none-any.whl", hash = "sha256:f171d32790256cab18d3f834c72a4261532a3b0e31f1515926e8392dde27a6f4", size = 34495, upload-time = "2026-06-08T13:45:38.33Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/e0/33704481e2fa8fb9c9afbe0238b1dae4263feba7f4611250a76ef466a817/scruby-1.7.0-py3-none-any.whl", hash = "sha256:3b1d4c6e54bd1b28f3f193e1287132441659683f4d6e4d26fd1b4a0017d2b348", size = 35023, upload-time = "2026-06-14T14:49:51.548Z" },
 ]
 
 [[package]]
 name = "scruby-fts"
-version = "0.10.0"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
@@ -1419,12 +1419,12 @@ test = [
 requires-dist = [
     { name = "anyio", specifier = ">=4.12.1" },
     { name = "manticoresearch-asyncio-devel", git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git" },
-    { name = "scruby-plugin", specifier = ">=0.2.2" },
-    { name = "xloft", specifier = ">=0.9.8" },
+    { name = "scruby-plugin", specifier = ">=1.0.0,<2.0.0" },
+    { name = "xloft", specifier = ">=1.1.0" },
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "scruby", specifier = ">=0.32.0" }]
+dev = [{ name = "scruby", specifier = ">=1.6.0,<2.0.0" }]
 docs = [
     { name = "mike", specifier = ">=2.1.3" },
     { name = "mkdocs", specifier = ">=1.6.1" },
@@ -1446,10 +1446,10 @@ types = []
 
 [[package]]
 name = "scruby-plugin"
-version = "0.7.2"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4f/c1/e25be56b78def4bb2cfd954db647ab800fb70a26cfbd90e43a456fcea0da/scruby_plugin-0.7.2-py3-none-any.whl", hash = "sha256:6935a2255e7c5a31dae84f36bf8f210a1ffa135da66a42e31a22b037fd4ee824", size = 4166, upload-time = "2026-06-08T13:59:03.723Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/47/74660def731bd774e4a7521c2f2024c16b9f0fb63fd82bb28f55cd7cc2fb/scruby_plugin-1.0.1-py3-none-any.whl", hash = "sha256:d62d452be87a0f957b01c1f07d985bcba6db03120af1cc214b6910069298eaf0", size = 4274, upload-time = "2026-06-13T11:00:14.333Z" },
 ]
 
 [[package]]
