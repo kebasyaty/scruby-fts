@@ -17,9 +17,8 @@ from threading import Event
 from typing import Any, final
 
 import manticoresearch
-import orjson
-from anyio import Path
 from scruby import Scruby, ScrubyConfig
+from scruby.cache import DocCache
 from scruby_plugin import ScrubyPlugin
 
 from scruby_fts.config import FTSConfig
@@ -53,7 +52,6 @@ class FullTextSearch(ScrubyPlugin):
         full_text_filter: tuple[str, str],
         filter_fn: Callable,
         hash_reduce_left: str,
-        db_root: str,
         class_model: Any,
         config: manticoresearch.configuration.Configuration,
         db_id: str,
@@ -69,62 +67,65 @@ class FullTextSearch(ScrubyPlugin):
         # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
         warnings.filterwarnings("ignore", category=RuntimeWarning)
         # Variable initialization
+        collection_name = class_model.__name__
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]  # pyrefly: ignore[bad-index]
-        separated_hash: str = "/".join(list(branch_number_as_hash))
-        leaf_path = Path(
-            *(
-                db_root,
-                class_model.__name__,
-                separated_hash,
-                "leaf.json",
-            ),
+        docs: dict[str, Any] = {}
+        result: list[Any] = []
+
+        match hash_reduce_left:
+            case 7:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]]
+            case 6:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]]
+            case 5:
+                docs = DocCache.cache[collection_name][branch_number_as_hash[0]][branch_number_as_hash[1]][
+                    branch_number_as_hash[2]
+                ]
+            case _:
+                msg = "Scruby.run() > Parameter: `hash_reduce_left` -> Valid values are Literal[7, 6, 5]."
+                raise AssertionError(msg)
+
+        table_name: str = f"scruby_{db_id}_{str(uuid.uuid4())[:8]}"
+        text_field_name: str = full_text_filter[0]
+        table_field: str = f"{text_field_name} text"
+        search_query = manticoresearch.SearchQuery(
+            query_string=f"@{text_field_name} {full_text_filter[1]}",
         )
-        docs: list[Any] = []
-        if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
-            table_name: str = f"scruby_{db_id}_{str(uuid.uuid4())[:8]}"
-            text_field_name: str = full_text_filter[0]
-            table_field: str = f"{text_field_name} text"
-            search_query = manticoresearch.SearchQuery(
-                query_string=f"@{text_field_name} {full_text_filter[1]}",
-            )
-            search_request = manticoresearch.SearchRequest(
-                table=table_name,
-                query=search_query,
-            )
-            # Enter a context with an instance of the API client
-            async with manticoresearch.ApiClient(config) as api_client:
-                # Create instances of API classes
-                index_api = manticoresearch.IndexApi(api_client)
-                search_api = manticoresearch.SearchApi(api_client)
-                utils_api = manticoresearch.UtilsApi(api_client)
-                try:
-                    # Create table
-                    await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
-                    # Start search
-                    for _, val in data.items():
-                        if stop_event.is_set():
-                            await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
-                            return None
-                        doc = class_model.model_validate_json(val)
-                        if filter_fn(doc):
-                            text_field_content = getattr(doc, text_field_name)
-                            # Performs a search on a table
-                            insert_request = manticoresearch.InsertDocumentRequest(
-                                table=table_name,
-                                doc={text_field_name: text_field_content or ""},
-                            )
-                            await index_api.insert(insert_request)
-                            search_response = await search_api.search(search_request)
-                            if len(search_response.hits.hits) > 0:
-                                docs.append(doc)
-                            # Clear table
-                            await utils_api.sql(f"TRUNCATE TABLE {table_name}")
-                finally:
-                    # Delete table
-                    await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
-        return docs or None
+        search_request = manticoresearch.SearchRequest(
+            table=table_name,
+            query=search_query,
+        )
+        # Enter a context with an instance of the API client
+        async with manticoresearch.ApiClient(config) as api_client:
+            # Create instances of API classes
+            index_api = manticoresearch.IndexApi(api_client)
+            search_api = manticoresearch.SearchApi(api_client)
+            utils_api = manticoresearch.UtilsApi(api_client)
+            try:
+                # Create table
+                await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
+                # Start search
+                for _, doc in docs.items():
+                    if stop_event.is_set():
+                        await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
+                        return None
+                    if filter_fn(doc):
+                        text_field_content = getattr(doc, text_field_name)
+                        # Performs a search on a table
+                        insert_request = manticoresearch.InsertDocumentRequest(
+                            table=table_name,
+                            doc={text_field_name: text_field_content or ""},
+                        )
+                        await index_api.insert(insert_request)
+                        search_response = await search_api.search(search_request)
+                        if len(search_response.hits.hits) > 0:
+                            result.append(doc)
+                        # Clear table
+                        await utils_api.sql(f"TRUNCATE TABLE {table_name}")
+            finally:
+                # Delete table
+                await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
+        return result or None
 
     async def find_one(
         self,
@@ -154,7 +155,6 @@ class FullTextSearch(ScrubyPlugin):
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(scruby_self._max_number_branch)
         hash_reduce_left: int = scruby_self._hash_reduce_left
-        db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
         stop_signal = Event()
         doc: Any | None = None
@@ -170,7 +170,6 @@ class FullTextSearch(ScrubyPlugin):
                     full_text_filter,
                     filter_fn,
                     hash_reduce_left,
-                    db_root,
                     class_model,
                     config,
                     db_id,
@@ -234,7 +233,6 @@ class FullTextSearch(ScrubyPlugin):
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(scruby_self._max_number_branch)
         hash_reduce_left: int = scruby_self._hash_reduce_left
-        db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
         stop_signal = Event()
         stop_outer_loop: bool = False
@@ -253,7 +251,6 @@ class FullTextSearch(ScrubyPlugin):
                     full_text_filter,
                     filter_fn,
                     hash_reduce_left,
-                    db_root,
                     class_model,
                     config,
                     db_id,
