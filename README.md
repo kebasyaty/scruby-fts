@@ -4,7 +4,7 @@
       <img
         height="80"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/logo.svg">
     </a>
   </p>
   <p>
@@ -34,9 +34,9 @@
 
 <br>
 
-[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby-fts/ "Documentation")
+[![Documentation](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/documentation.svg "Documentation")](https://kebasyaty.github.io/scruby-fts/ "Documentation")
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby-fts/blob/v1/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby-fts/blob/v2/REQUIREMENTS.md "Requirements")
 
 ## Installation
 
@@ -79,15 +79,14 @@ sudo systemctl status manticore --no-pager -l
 
 ## Usage
 
-[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby-fts/latest/pages/usage/ "Examples")
+[![Examples](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/examples.svg "Examples")](https://kebasyaty.github.io/scruby-fts/latest/pages/usage/ "Examples")
 
 ```python
 import anyio
 from typing import Any
 from pydantic import Field
-from scruby import Scruby, ScrubyModel
+from scruby import ReturnType, Scruby, ScrubyModel
 from scruby_fts import FullTextSearch, FTSConfig
-from pprint import pprint as pp
 
 
 class Car(ScrubyModel):
@@ -125,25 +124,45 @@ async def main() -> None:
         )
         await car_coll.add_doc(car)
 
-    # Find one car
-    car = await car_coll.plugins.fullTextSearch.find_one(
+    # Find car
+    car: Car | None = await car_coll.plugins.fullTextSearch.find_one(
         morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
         full_text_filter=("model", "EZ-6 9"),
     )
-    if car is not None:
-      pp(car)
-    else:
-      print("Not Found")
 
-    # Fand many cars
-    car_list = await car_coll.plugins.fullTextSearch.find_many(
+    # Return car in JSON format
+    car: str | None = await car_coll.plugins.fullTextSearch.find_one(
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
+        full_text_filter=("model", "EZ-6 9"),
+        return_type=ReturnType.JSON,
+    )
+
+    # Return car in Dictionary format
+    car: dict | None = await car_coll.plugins.fullTextSearch.find_one(
+        morphology=FTSConfig.morphology.get("English"),  # 'English' or 'en'
+        full_text_filter=("model", "EZ-6 9"),
+        return_type=ReturnType.DICT,
+    )
+
+    # Fand cars
+    cars: list[Car] | None = await car_coll.plugins.fullTextSearch.find_many(
         morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
         full_text_filter=("description", "future of automotive"),
     )
-    if car_list is not None:
-      pp(car_list)
-    else:
-      print("Not Found")
+
+    # Return cars in JSON format
+    cars: str | None = await car_coll.plugins.fullTextSearch.find_many(
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
+        full_text_filter=("description", "future of automotive"),
+        return_type=ReturnType.JSON,
+    )
+
+    # Return cars in Dictionary format
+    cars: list[dict] | None = await car_coll.plugins.fullTextSearch.find_many(
+        morphology=FTSConfig.morphology.get("en"),  # 'en' or 'English'
+        full_text_filter=("description", "future of automotive"),
+        return_type=ReturnType.DICT,
+    )
 
     # Full database deletion.
     # Hint: The main purpose is tests.
@@ -156,8 +175,8 @@ if __name__ == "__main__":
 
 <br>
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby-fts/blob/v1/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby-fts/blob/v2/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby-fts/blob/main/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby-fts/blob/main/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v1/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby-fts/blob/main/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v2/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby-fts/blob/main/GPL-3.0-LICENSE "GPL-3.0")
