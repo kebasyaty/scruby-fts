@@ -14,11 +14,12 @@ import warnings
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
-from typing import Any, final
+from typing import Any, Never, assert_never, final
 
 import manticoresearch
 from scruby import Scruby, ScrubyConfig
 from scruby.cache import DocCache
+from scruby.mixins.find import ReturnType
 from scruby_plugin import ScrubyPlugin
 
 from scruby_fts.config import FTSConfig
@@ -132,6 +133,7 @@ class FullTextSearch(ScrubyPlugin):
         morphology: str,
         full_text_filter: tuple[str, str],
         filter_fn: Callable = lambda _: True,
+        return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
         """Find a one document that matches the filter, using full-text search.
 
@@ -189,7 +191,15 @@ class FullTextSearch(ScrubyPlugin):
                     # Stop loop
                     break
         # Return document
-        return doc
+        match return_type.value:
+            case 1:
+                return doc
+            case 2:
+                return doc.model_dump_json() if doc is not None else None
+            case 3:
+                return doc.model_dump() if doc is not None else None
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
     async def find_many(
         self,
@@ -200,7 +210,8 @@ class FullTextSearch(ScrubyPlugin):
         page_number: int = 1,
         sort_fn: Callable | None = lambda doc: doc.created_at,
         sort_reverse: bool = True,
-    ) -> list[Any] | None:
+        return_type: ReturnType = ReturnType.MODEL,
+    ) -> list[Any] | str | None:
         """Find the many of documents that match the filter, using full-text search.
 
         Attention:
@@ -281,4 +292,12 @@ class FullTextSearch(ScrubyPlugin):
         if sort_fn is not None:
             result.sort(key=sort_fn, reverse=sort_reverse)
         # Return a document list
-        return result or None
+        match return_type.value:
+            case 1:
+                return result or None
+            case 2:
+                return f"[{','.join([doc.model_dump_json() for doc in result])}]" if result is not None else None
+            case 3:
+                return [doc.model_dump() for doc in result] if result is not None else None
+            case _ as unreachable:
+                assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
