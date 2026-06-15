@@ -147,6 +147,7 @@ class FullTextSearch(ScrubyPlugin):
                                                 full_text_filter[0] -> name of text field.
                                                 full_text_filter[1] -> query string.
             filter_fn (Callable): A function that execute the conditions of filtering.
+            return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
             Document or None.
@@ -232,6 +233,7 @@ class FullTextSearch(ScrubyPlugin):
                                        By default, documents are sorted by creation date.
             sort_reverse: (bool): Sorting direction.
                                   By default, sort descending (newest to oldest).
+            return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
             List of documents or None.
