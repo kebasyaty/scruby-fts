@@ -85,14 +85,9 @@ sudo systemctl status manticore --no-pager -l
 import anyio
 from typing import Any
 from pydantic import Field
-from scruby import Scruby, ScrubyModel, ScrubyConfig
+from scruby import Scruby, ScrubyModel
 from scruby_fts import FullTextSearch, FTSConfig
 from pprint import pprint as pp
-
-# Plugins connection.
-ScrubyConfig.plugins = [
-    FullTextSearch,
-]
 
 
 class Car(ScrubyModel):
@@ -111,6 +106,9 @@ class Car(ScrubyModel):
 
 async def main() -> None:
     """Example."""
+    # Activate database.
+    Scruby.run(plugins=[FullTextSearch])
+
     # Delete unnecessary tables that remain due to errors
     await FullTextSearch.delete_orphaned_tables()
 
