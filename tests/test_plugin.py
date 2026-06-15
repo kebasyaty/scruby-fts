@@ -122,7 +122,7 @@ class TestNegative:
 class TestPositive:
     """Positive tests."""
 
-    def test_support_scruby_version(self) -> None:
+    async def test_support_scruby_version(self) -> None:
         """Check Scruby version."""
         assert FullTextSearch.SCRUBY_VERSION == 1
 
