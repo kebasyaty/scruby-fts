@@ -154,15 +154,20 @@ class FullTextSearch(ScrubyPlugin):
         """
         # Get Scruby instance
         scruby_self = self.scruby_self()
+
         # Variable initialization
+        hash_reduce_left: int = scruby_self._hash_reduce_left
+        assert hash_reduce_left != 0, (
+            "Scruby.run(hash_reduce_left = 0) - Not valid for `plugins.fullTextSearch.find_one` method."
+        )
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(scruby_self._max_number_branch)
-        hash_reduce_left: int = scruby_self._hash_reduce_left
         class_model: Any = scruby_self._class_model
         stop_signal = Event()
         doc: Any | None = None
         config = FTSConfig.config
         db_id = scruby_self._db_id
+
         # Run quantum loop
         with ThreadPoolExecutor(scruby_self._max_workers) as executor:
             futures: list[Future] = [
@@ -191,6 +196,7 @@ class FullTextSearch(ScrubyPlugin):
                     stop_signal.set()
                     # Stop loop
                     break
+
         # Return document
         match return_type.value:
             case 1:
@@ -240,12 +246,17 @@ class FullTextSearch(ScrubyPlugin):
         """
         # The `page_number` parameter must not be less than one
         assert page_number > 0, "`find_many` => The `page_number` parameter must not be less than one."
+
         # Get Scruby instance
         scruby_self = self.scruby_self()
+
         # Variable initialization
+        hash_reduce_left: int = scruby_self._hash_reduce_left
+        assert hash_reduce_left != 0, (
+            "Scruby.run(hash_reduce_left = 0) - Not valid for `plugins.fullTextSearch.find_many` method."
+        )
         search_task_fn: Callable = self._task_find
         branch_numbers: range = range(scruby_self._max_number_branch)
-        hash_reduce_left: int = scruby_self._hash_reduce_left
         class_model: Any = scruby_self._class_model
         stop_signal = Event()
         stop_outer_loop: bool = False
@@ -254,6 +265,7 @@ class FullTextSearch(ScrubyPlugin):
         counter: int = 0
         number_docs_skippe: int = limit_docs * (page_number - 1) if page_number > 1 else 0
         result: list[Any] = []
+
         # Run quantum loop
         with ThreadPoolExecutor(scruby_self._max_workers) as executor:
             futures: list[Future] = [
@@ -290,6 +302,7 @@ class FullTextSearch(ScrubyPlugin):
                             number_docs_skippe -= 1
                 if stop_outer_loop:
                     break
+
         # Sorting
         if sort_fn is not None:
             result.sort(key=sort_fn, reverse=sort_reverse)
