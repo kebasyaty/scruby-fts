@@ -48,15 +48,15 @@ class FullTextSearch(ScrubyPlugin):
 
     @staticmethod
     async def _task_find(
-        branch_number: int,
         morphology: str,
         full_text_filter: tuple[str, str],
         filter_fn: Callable,
-        hash_reduce_left: str,
-        class_model: Any,
-        config: manticoresearch.configuration.Configuration,
         db_id: str,
+        hash_reduce_left: str,
+        branch_number: int,
+        class_model: Any,
         stop_event: Event,
+        config: manticoresearch.configuration.Configuration,
     ) -> list[Any] | None:
         """Task for finding documents, using full-text search.
 
@@ -173,15 +173,15 @@ class FullTextSearch(ScrubyPlugin):
             futures: list[Future] = [
                 executor.submit(
                     search_task_fn,
-                    branch_number,
                     morphology,
                     full_text_filter,
                     filter_fn,
-                    hash_reduce_left,
-                    class_model,
-                    config,
                     db_id,
+                    hash_reduce_left,
+                    branch_number,
+                    class_model,
                     stop_signal,
+                    config,
                 )
                 for branch_number in branch_numbers
             ]
@@ -271,15 +271,15 @@ class FullTextSearch(ScrubyPlugin):
             futures: list[Future] = [
                 executor.submit(
                     search_task_fn,
-                    branch_number,
                     morphology,
                     full_text_filter,
                     filter_fn,
-                    hash_reduce_left,
-                    class_model,
-                    config,
                     db_id,
+                    hash_reduce_left,
+                    branch_number,
+                    class_model,
                     stop_signal,
+                    config,
                 )
                 for branch_number in branch_numbers
             ]
