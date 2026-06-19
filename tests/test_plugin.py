@@ -32,10 +32,6 @@ class Car(ScrubyModel):
     )
 
 
-# Activate database.
-Scruby.run(plugins=[FullTextSearch])
-
-
 async def test_delete_orphaned_tables() -> None:
     """Delete unnecessary tables that remain due to errors."""
     await FullTextSearch.delete_orphaned_tables()
@@ -46,11 +42,11 @@ class TestNegative:
 
     async def test_full_text_filter_field_name(self) -> None:
         """Invalid full_text_filter[0]->field name."""
-        # Delete DB.
-        Scruby.napalm()
+        # Activate database.
+        Scruby.run(plugins=[FullTextSearch])
         #
         # Get collection `Car`
-        car_coll = await Scruby.collection(Car)
+        car_coll = Scruby(Car)
         # Create car.
         car = Car(
             brand="Mazda",
@@ -89,11 +85,11 @@ class TestNegative:
     )
     async def test_full_text_filter_field_type(self) -> None:
         """Invalid full_text_filter[0]->field type."""
-        # Delete DB.
-        Scruby.napalm()
+        # Activate database.
+        Scruby.run(plugins=[FullTextSearch])
         #
         # Get collection `Car`
-        car_coll = await Scruby.collection(Car)
+        car_coll = Scruby(Car)
         # Create car.
         car = Car(
             brand="Mazda",
@@ -128,11 +124,11 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Test a `find_one` method."""
-        # Delete DB.
-        Scruby.napalm()
+        # Activate database.
+        Scruby.run(plugins=[FullTextSearch])
         #
         # Get collection `Car`
-        car_coll = await Scruby.collection(Car)
+        car_coll = Scruby(Car)
         # Create cars.
         for num in range(1, 10):
             car = Car(
@@ -181,11 +177,11 @@ class TestPositive:
 
     async def test_find_many(self) -> None:
         """Test a `find_many` method."""
-        # Delete DB.
-        Scruby.napalm()
+        # Activate database.
+        Scruby.run(plugins=[FullTextSearch])
         #
         # Get collection `Car`
-        car_coll = await Scruby.collection(Car)
+        car_coll = Scruby(Car)
         # Create cars.
         for num in range(1, 10):
             car = Car(

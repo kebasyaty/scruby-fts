@@ -112,7 +112,7 @@ async def main() -> None:
     await FullTextSearch.delete_orphaned_tables()
 
     # Get collection `Car`
-    car_coll = await Scruby.collection(Car)
+    car_coll = Scruby(Car)
     # Create cars.
     for num in range(1, 10):
         car = Car(

@@ -52,7 +52,7 @@ class FullTextSearch(ScrubyPlugin):
         full_text_filter: tuple[str, str],
         filter_fn: Callable,
         db_id: str,
-        hash_reduce_left: str,
+        hash_reduce_left: int,
         branch_number: int,
         class_model: Any,
         stop_event: Event,
