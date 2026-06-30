@@ -64,7 +64,8 @@
       "type": "shell",
       "command": [
         "uv run python pyhelpers/remove_pycache.py;",
-        "uv run pytest -v tests/;",
+        "uv run pytest -v tests/test_settings.py;",
+        "uv run pytest -v tests/test_plugin.py;",
         "uv run python pyhelpers/remove_pycache.py;"
       ],
       "problemMatcher": []
