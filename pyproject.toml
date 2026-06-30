@@ -7,12 +7,12 @@ requires-python = ">=3.12,<4.0"
 license = "MIT or GPL-3.0-or-later"
 license-files = ["GPL-3.0-LICENSE", "MIT-LICENSE"]
 authors = [{ name = "kebasyaty", email = "kebasyaty@gmail.com" }]
-keywords = ["database", "manticore", "plugin", "scruby", "search"]
+keywords = ["async", "database", "manticore", "plugin", "scruby", "search"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Operating System :: MacOS :: MacOS X",
-  "Operating System :: Microsoft :: Windows",
+  # "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX",
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",
