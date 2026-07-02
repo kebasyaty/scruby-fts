@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Annotated
+
 import manticoresearch
 import pytest
 from pydantic import Field
@@ -19,17 +21,19 @@ Scruby.napalm()
 class Car(ScrubyModel):
     """Car model."""
 
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    year: int = Field(strict=True, frozen=True)
-    power_reserve: int = Field(strict=True, frozen=True)
-    description: str = Field(strict=True)
+    brand: str = Field(frozen=True)
+    model: str = Field(frozen=True)
+    year: int
+    power_reserve: int
+    description: str
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
 async def test_delete_orphaned_tables() -> None:
