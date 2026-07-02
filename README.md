@@ -83,24 +83,28 @@ sudo systemctl status manticore --no-pager -l
 
 ```python
 import anyio
-from typing import Any
+from typing import Annotated, Any
 from pydantic import Field
 from scruby import ReturnType, Scruby, ScrubyModel
 from scruby_fts import FullTextSearch, FTSConfig
 
 
 class Car(ScrubyModel):
-    brand: str = Field(strict=True, frozen=True)
-    model: str = Field(strict=True, frozen=True)
-    year: int = Field(strict=True, frozen=True)
-    power_reserve: int = Field(strict=True, frozen=True)
-    description: str = Field(strict=True)
+    """Car model."""
+
+    brand: str = Field(frozen=True)
+    model: str = Field(frozen=True)
+    year: int
+    power_reserve: int
+    description: str
     # key is always at bottom
-    key: str = Field(
-        strict=True,
-        frozen=True,
-        default_factory=lambda data: f"{data['brand']}:{data['model']}",
-    )
+    key: Annotated[
+        str,
+        Field(
+            frozen=True,
+            default_factory=lambda data: f"{data['brand']}:{data['model']}",
+        ),
+    ]
 
 
 async def main() -> None:
