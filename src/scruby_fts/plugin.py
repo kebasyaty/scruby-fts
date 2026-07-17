@@ -29,7 +29,7 @@ from scruby_fts.config import FTSConfig
 class FullTextSearch(ScrubyPlugin):
     """Plugin for Scruby based on Manticore Search."""
 
-    def __init__(self, scruby_self: Scruby) -> None:  # noqa: D107
+    def __init__(self, scruby_self: Scruby) -> None:  # ruff:ignore[undocumented-public-init]
         ScrubyPlugin.__init__(self, scruby_self)
 
     @classmethod
