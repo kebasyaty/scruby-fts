@@ -1503,10 +1503,10 @@ types = []
 
 [[package]]
 name = "scruby-plugin"
-version = "2.2.5"
+version = "2.2.6"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fa/47/55b73774055ec09c11717e08d7931adc3779bce41fe57d3fac5b62ce855a/scruby_plugin-2.2.5-py3-none-any.whl", hash = "sha256:5e275311b504803363175d105008693658709be73b9eb01deade2236b7b52f34", size = 4278, upload-time = "2026-07-17T15:55:51.341Z" },
+    { url = "https://files.pythonhosted.org/packages/63/c8/9741c341e7e790faf2e66e49c2fce3dbfc0f242d5b0e00acb48c21d4c757/scruby_plugin-2.2.6-py3-none-any.whl", hash = "sha256:afa9412a59096182fdbbf65feff9bda2d951e662886367e55b22dbf9e337c68c", size = 4280, upload-time = "2026-07-21T10:08:08.772Z" },
 ]
 
 [[package]]
