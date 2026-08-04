@@ -546,8 +546,8 @@ wheels = [
 
 [[package]]
 name = "manticoresearch-asyncio-devel"
-version = "2.1.0"
-source = { git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git#9adcb2546bc510bfddb6d8bf49fae8ee0ac45816" }
+version = "2.2.0"
+source = { git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git#a238d676aa76ebea3a4e3330669c29c099f01247" }
 dependencies = [
     { name = "aiohttp" },
     { name = "aiohttp-retry" },
@@ -1440,7 +1440,7 @@ wheels = [
 
 [[package]]
 name = "scruby-fts"
-version = "2.2.5"
+version = "3.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "anyio" },
@@ -1475,7 +1475,7 @@ test = [
 requires-dist = [
     { name = "anyio", specifier = ">=4.12.1" },
     { name = "manticoresearch-asyncio-devel", git = "https://github.com/manticoresoftware/manticoresearch-python-asyncio.git" },
-    { name = "scruby-plugin", specifier = ">=2.0.0,<3.0.0" },
+    { name = "scruby-plugin", specifier = ">=3.0.0,<4.0.0" },
     { name = "xloft", specifier = ">=1.1.0" },
 ]
 
@@ -1502,10 +1502,10 @@ types = []
 
 [[package]]
 name = "scruby-plugin"
-version = "2.2.7"
+version = "3.0.0"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/de/dd/bc26a2853bb8c389c7f80776f095020ccb635c99518afe2e609fe6ca2b71/scruby_plugin-2.2.7-py3-none-any.whl", hash = "sha256:7d777883bafbee42e9ee1e85da4e78bbed1b9aa027e8e56e26bc7e88d6bbea01", size = 4279, upload-time = "2026-08-01T06:09:35.392Z" },
+    { url = "https://files.pythonhosted.org/packages/57/90/161052b0aa524de9f29240691f0489ff3db7717d641f0c83f6324e314044/scruby_plugin-3.0.0-py3-none-any.whl", hash = "sha256:dda8dc60ba1164e55b3e13c688c4dc287eb40af2f88236aa0bc7a4d597327aa7", size = 4291, upload-time = "2026-08-04T12:07:47.002Z" },
 ]
 
 [[package]]
