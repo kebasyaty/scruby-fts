@@ -99,6 +99,7 @@ class FullTextSearch(ScrubyPlugin):
             table_name: str = f"scruby_{db_id}_{str(uuid.uuid4())[:8]}"
             text_field_name: str = full_text_filter[0]
             table_field: str = f"{text_field_name} text"
+
             search_query = manticoresearch.SearchQuery(
                 query_string=f"@{text_field_name} {full_text_filter[1]}",
             )
@@ -106,6 +107,7 @@ class FullTextSearch(ScrubyPlugin):
                 table=table_name,
                 query=search_query,
             )
+
             leaf_db = await aiodbm.open(str(leaf_path), flag="c", mode=mode)
             keys = await leaf_db.keys()
 
