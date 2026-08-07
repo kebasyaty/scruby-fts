@@ -46,9 +46,12 @@ class TestNegative:
 
     async def test_full_text_filter_field_name(self) -> None:
         """Invalid full_text_filter[0]->field name."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run(plugins=[FullTextSearch])
-        #
+
         # Get collection `Car`
         car_coll = Scruby(Car)
         # Create car.
@@ -89,9 +92,12 @@ class TestNegative:
     )
     async def test_full_text_filter_field_type(self) -> None:
         """Invalid full_text_filter[0]->field type."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run(plugins=[FullTextSearch])
-        #
+
         # Get collection `Car`
         car_coll = Scruby(Car)
         # Create car.
@@ -128,9 +134,12 @@ class TestPositive:
 
     async def test_find_one(self) -> None:
         """Test a `find_one` method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run(plugins=[FullTextSearch])
-        #
+
         # Get collection `Car`
         car_coll = Scruby(Car)
         # Create cars.
@@ -181,9 +190,12 @@ class TestPositive:
 
     async def test_find_many(self) -> None:
         """Test a `find_many` method."""
+        # Delete DB.
+        Scruby.napalm()
+
         # Activate database.
         Scruby.run(plugins=[FullTextSearch])
-        #
+
         # Get collection `Car`
         car_coll = Scruby(Car)
         # Create cars.
