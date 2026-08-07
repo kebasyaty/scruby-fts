@@ -27,8 +27,8 @@ from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event
 from typing import Any, Never, assert_never, final
 
+import aiodbm
 import manticoresearch
-import orjson
 from anyio import Path
 from scruby import Scruby, ScrubyConfig
 from scruby.mixins.find import ReturnType
@@ -67,6 +67,7 @@ class FullTextSearch(ScrubyPlugin):
         hash_reduce_left: str,
         db_root: str,
         class_model: Any,
+        mode: int,
         config: manticoresearch.configuration.Configuration,
         db_id: str,
         stop_event: Event,
@@ -80,6 +81,7 @@ class FullTextSearch(ScrubyPlugin):
         """
         # Suppress warning - RuntimeWarning: coroutine 'Find._task_find' was never awaited
         warnings.filterwarnings("ignore", category=RuntimeWarning)
+
         # Variable initialization
         branch_number_as_hash: str = f"{branch_number:08x}"[hash_reduce_left:]  # pyrefly: ignore[bad-index]
         separated_hash: str = "/".join(list(branch_number_as_hash))
@@ -88,16 +90,16 @@ class FullTextSearch(ScrubyPlugin):
                 db_root,
                 class_model.__name__,
                 separated_hash,
-                "leaf.json",
+                "leaf.dbm",
             ),
         )
         docs: list[Any] = []
+
         if await leaf_path.exists():
-            data_json: bytes = await leaf_path.read_bytes()
-            data: dict[str, str] = orjson.loads(data_json) or {}
             table_name: str = f"scruby_{db_id}_{str(uuid.uuid4())[:8]}"
             text_field_name: str = full_text_filter[0]
             table_field: str = f"{text_field_name} text"
+
             search_query = manticoresearch.SearchQuery(
                 query_string=f"@{text_field_name} {full_text_filter[1]}",
             )
@@ -105,21 +107,29 @@ class FullTextSearch(ScrubyPlugin):
                 table=table_name,
                 query=search_query,
             )
+
+            leaf_db = await aiodbm.open(str(leaf_path), flag="c", mode=mode)
+            keys = await leaf_db.keys()
+
             # Enter a context with an instance of the API client
             async with manticoresearch.ApiClient(config) as api_client:
                 # Create instances of API classes
                 index_api = manticoresearch.IndexApi(api_client)
                 search_api = manticoresearch.SearchApi(api_client)
                 utils_api = manticoresearch.UtilsApi(api_client)
+
                 try:
                     # Create table
                     await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
+
                     # Start search
-                    for _, val in data.items():
+                    for key in keys:
                         if stop_event.is_set():
                             await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
                             return None
-                        doc = class_model.model_validate_json(val)
+                        doc_json = await leaf_db.get(key)
+                        doc = class_model.model_validate_json(doc_json)
+
                         if filter_fn(doc):
                             text_field_content = getattr(doc, text_field_name)
                             # Performs a search on a table
@@ -136,6 +146,8 @@ class FullTextSearch(ScrubyPlugin):
                 finally:
                     # Delete table
                     await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
+                    await leaf_db.close()
+
         return docs or None
 
     async def find_one(
@@ -174,6 +186,7 @@ class FullTextSearch(ScrubyPlugin):
         branch_numbers: range = range(scruby_self._max_number_branch)
         db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
+        mode = scruby_self._mode
         stop_signal = Event()
         doc: Any | None = None
         config = FTSConfig.config
@@ -191,6 +204,7 @@ class FullTextSearch(ScrubyPlugin):
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                     config,
                     db_id,
                     stop_signal,
@@ -271,6 +285,7 @@ class FullTextSearch(ScrubyPlugin):
         branch_numbers: range = range(scruby_self._max_number_branch)
         db_root: str = scruby_self._db_root
         class_model: Any = scruby_self._class_model
+        mode = scruby_self._mode
         stop_signal = Event()
         stop_outer_loop: bool = False
         config = FTSConfig.config
@@ -291,6 +306,7 @@ class FullTextSearch(ScrubyPlugin):
                     hash_reduce_left,
                     db_root,
                     class_model,
+                    mode,
                     config,
                     db_id,
                     stop_signal,
