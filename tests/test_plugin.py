@@ -130,7 +130,7 @@ class TestPositive:
 
     async def test_support_scruby_version(self) -> None:
         """Check Scruby version."""
-        assert FullTextSearch.SCRUBY_VERSION == 3
+        assert FullTextSearch.SCRUBY_VERSION == 4
 
     async def test_find_one(self) -> None:
         """Test a `find_one` method."""

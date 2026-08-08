@@ -4,7 +4,7 @@
       <img
         id="logo"
         alt="Logo"
-        src="https://raw.githubusercontent.com/kebasyaty/scruby-fts/v3/assets/logo.svg">
+        src="https://raw.githubusercontent.com/kebasyaty/scruby-fts/v4/assets/logo.svg">
     </a>
   </p>
   <p>
@@ -20,8 +20,8 @@
       <a href="https://docs.astral.sh/ruff/" alt="Code style: Ruff"><img src="https://img.shields.io/badge/code%20style-Ruff-FDD835.svg" alt="Code style: Ruff"></a>
       <a href="https://pypi.org/project/scruby-fts"><img src="https://img.shields.io/pypi/format/scruby-fts" alt="Format"></a>
       <a href="https://pepy.tech/projects/scruby-fts"><img src="https://static.pepy.tech/badge/scruby-fts" alt="PyPI Downloads"></a>
-      <a href="https://github.com/kebasyaty/scruby-fts/blob/v3/MIT-LICENSE" alt="License: MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-      <a href="https://github.com/kebasyaty/scruby-fts/blob/v3/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+      <a href="https://github.com/kebasyaty/scruby-fts/blob/v4/MIT-LICENSE" alt="License: MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+      <a href="https://github.com/kebasyaty/scruby-fts/blob/v4/GPL-3.0-LICENSE" alt="License: GPL v3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
     </p>
   </p>
 </div>
@@ -34,10 +34,10 @@ Scruby-FTS is a plugin for the <a href="https://pypi.org/project/scruby/" alt="S
 
 <hr>
 
-[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v3/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby-fts/blob/v3/REQUIREMENTS.md "Requirements")
+[![Requirements](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v4/assets/links/requirements.svg "Requirements")](https://github.com/kebasyaty/scruby-fts/blob/v4/REQUIREMENTS.md "Requirements")
 
-[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v3/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby-fts/blob/v3/CHANGELOG.md "Changelog")
+[![Changelog](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v4/assets/links/changelog.svg "Changelog")](https://github.com/kebasyaty/scruby-fts/blob/v4/CHANGELOG.md "Changelog")
 
-[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v3/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby-fts/blob/v3/MIT-LICENSE "MIT")
+[![MIT](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v4/assets/links/mit.svg "MIT")](https://github.com/kebasyaty/scruby-fts/blob/v4/MIT-LICENSE "MIT")
 
-[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v3/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby-fts/blob/v3/GPL-3.0-LICENSE "GPL-3.0")
+[![GPL-3.0](https://raw.githubusercontent.com/kebasyaty/scruby-fts/v4/assets/links/gpl-3.0-or-later.svg "GPL-3.0")](https://github.com/kebasyaty/scruby-fts/blob/v4/GPL-3.0-LICENSE "GPL-3.0")
