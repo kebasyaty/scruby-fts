@@ -9,6 +9,8 @@ uv add "scruby-fts>=1.0.0,<2.0.0"
 uv add "scruby-fts>=2.0.0,<3.0.0"
 # For Scruby version 3
 uv add "scruby-fts>=3.0.0,<4.0.0"
+# For Scruby version 4
+uv add "scruby-fts>=4.0.0,<5.0.0"
 ```
 
 #### Install Manticore Search

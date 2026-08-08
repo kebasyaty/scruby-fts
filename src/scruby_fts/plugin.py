@@ -108,45 +108,44 @@ class FullTextSearch(ScrubyPlugin):
                 query=search_query,
             )
 
-            leaf_db = await aiodbm.open(str(leaf_path), flag="c", mode=mode)
-            keys = await leaf_db.keys()
+            async with aiodbm.open(str(leaf_path), flag="c", mode=mode) as leaf_db:
+                keys = await leaf_db.keys()
 
-            # Enter a context with an instance of the API client
-            async with manticoresearch.ApiClient(config) as api_client:
-                # Create instances of API classes
-                index_api = manticoresearch.IndexApi(api_client)
-                search_api = manticoresearch.SearchApi(api_client)
-                utils_api = manticoresearch.UtilsApi(api_client)
+                # Enter a context with an instance of the API client
+                async with manticoresearch.ApiClient(config) as api_client:
+                    # Create instances of API classes
+                    index_api = manticoresearch.IndexApi(api_client)
+                    search_api = manticoresearch.SearchApi(api_client)
+                    utils_api = manticoresearch.UtilsApi(api_client)
 
-                try:
-                    # Create table
-                    await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
+                    try:
+                        # Create table
+                        await utils_api.sql(f"CREATE TABLE {table_name}({table_field}) morphology = '{morphology}'")
 
-                    # Start search
-                    for key in keys:
-                        if stop_event.is_set():
-                            await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
-                            return None
-                        doc_json = await leaf_db.get(key)
-                        doc = class_model.model_validate_json(doc_json)
+                        # Start search
+                        for key in keys:
+                            if stop_event.is_set():
+                                await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
+                                return None
+                            doc_json = await leaf_db.get(key)
+                            doc = class_model.model_validate_json(doc_json)
 
-                        if filter_fn(doc):
-                            text_field_content = getattr(doc, text_field_name)
-                            # Performs a search on a table
-                            insert_request = manticoresearch.InsertDocumentRequest(
-                                table=table_name,
-                                doc={text_field_name: text_field_content or ""},
-                            )
-                            await index_api.insert(insert_request)
-                            search_response = await search_api.search(search_request)
-                            if len(search_response.hits.hits) > 0:
-                                docs.append(doc)
-                            # Clear table
-                            await utils_api.sql(f"TRUNCATE TABLE {table_name}")
-                finally:
-                    # Delete table
-                    await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
-                    await leaf_db.close()
+                            if filter_fn(doc):
+                                text_field_content = getattr(doc, text_field_name)
+                                # Performs a search on a table
+                                insert_request = manticoresearch.InsertDocumentRequest(
+                                    table=table_name,
+                                    doc={text_field_name: text_field_content or ""},
+                                )
+                                await index_api.insert(insert_request)
+                                search_response = await search_api.search(search_request)
+                                if len(search_response.hits.hits) > 0:
+                                    docs.append(doc)
+                                # Clear table
+                                await utils_api.sql(f"TRUNCATE TABLE {table_name}")
+                    finally:
+                        # Delete table
+                        await utils_api.sql(f"DROP TABLE IF EXISTS {table_name}")
 
         return docs or None
 
