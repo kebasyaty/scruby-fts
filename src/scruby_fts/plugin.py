@@ -30,8 +30,7 @@ from typing import Any, Never, assert_never, final
 import aiodbm
 import manticoresearch
 from anyio import Path
-from scruby import Scruby, ScrubyConfig
-from scruby.mixins.find import ReturnType
+from scruby import ReturnType, Scruby, ScrubyConfig
 from scruby_plugin import ScrubyPlugin
 
 from scruby_fts.config import FTSConfig
