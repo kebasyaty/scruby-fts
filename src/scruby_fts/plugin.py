@@ -153,6 +153,8 @@ class FullTextSearch(ScrubyPlugin):
         morphology: str,
         full_text_filter: tuple[str, str],
         filter_fn: Callable = lambda _: True,
+        include_fields: set[str] | None = None,
+        exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> Any | None:
         """Find a one document that matches the filter, using full-text search.
@@ -167,6 +169,10 @@ class FullTextSearch(ScrubyPlugin):
                                                 full_text_filter[0] -> name of text field.
                                                 full_text_filter[1] -> query string.
             filter_fn (Callable): A function that execute the conditions of filtering.
+            include_fields: (set[str] | None): A set of fields to include in the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
+            exclude_fields: (set[str] | None): A set of fields to exclude from the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
             return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
@@ -226,9 +232,23 @@ class FullTextSearch(ScrubyPlugin):
             case 1:
                 return doc
             case 2:
-                return doc.model_dump_json() if doc is not None else None
+                return (
+                    doc.model_dump_json(
+                        include=include_fields,
+                        exclude=exclude_fields,
+                    )
+                    if doc is not None
+                    else None
+                )
             case 3:
-                return doc.model_dump() if doc is not None else None
+                return (
+                    doc.model_dump(
+                        include=include_fields,
+                        exclude=exclude_fields,
+                    )
+                    if doc is not None
+                    else None
+                )
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
 
@@ -241,6 +261,8 @@ class FullTextSearch(ScrubyPlugin):
         page_number: int = 1,
         sort_fn: Callable | None = lambda doc: doc.created_at,
         sort_reverse: bool = True,
+        include_fields: set[str] | None = None,
+        exclude_fields: set[str] | None = None,
         return_type: ReturnType = ReturnType.MODEL,
     ) -> list[Any] | str | None:
         """Find the many of documents that match the filter, using full-text search.
@@ -263,6 +285,10 @@ class FullTextSearch(ScrubyPlugin):
                                        By default, documents are sorted by creation date.
             sort_reverse: (bool): Sorting direction.
                                   By default, sort descending (newest to oldest).
+            include_fields: (set[str] | None): A set of fields to include in the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
+            exclude_fields: (set[str] | None): A set of fields to exclude from the output.
+                                               Available for `ReturnType.JSON` and `ReturnType.DICT`.
             return_type (ReturnType): ScrubyModel, JSON-string or Dictionary.
 
         Returns:
@@ -339,8 +365,32 @@ class FullTextSearch(ScrubyPlugin):
             case 1:
                 return result or None
             case 2:
-                return f"[{','.join([doc.model_dump_json() for doc in result])}]" if result is not None else None
+                return (
+                    f"[{
+                        ','.join(
+                            [
+                                doc.model_dump_json(
+                                    include=include_fields,
+                                    exclude=exclude_fields,
+                                )
+                                for doc in result
+                            ]
+                        )
+                    }]"
+                    if result is not None
+                    else None
+                )
             case 3:
-                return [doc.model_dump() for doc in result] if result is not None else None
+                return (
+                    [
+                        doc.model_dump(
+                            include=include_fields,
+                            exclude=exclude_fields,
+                        )
+                        for doc in result
+                    ]
+                    if result is not None
+                    else None
+                )
             case _ as unreachable:
                 assert_never(Never(unreachable))  # pyrefly: ignore[not-callable]
