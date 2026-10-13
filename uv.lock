@@ -1557,7 +1557,7 @@ wheels = [
 
 [[package]]
 name = "scruby-fts"
-version = "4.0.1"
+version = "4.1.0"
 source = { editable = "." }
 default-groups = ["dev", "docs", "lint", "test", "types"]
 dependencies = [
